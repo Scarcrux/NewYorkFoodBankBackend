@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'mysecretkey'
+app.config['SECRET_KEY'] = 'mysecretkeys'
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -25,13 +25,14 @@ class Organization(db.Model):
     address = db.Column(db.String(80))
     hours = db.Column(db.String(10))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    def __init__(self,name):
+    def __init__(self,organization_name, contact_name, phone, type, address, hours, user_id):
         self.organization_name = organization_name
         self.contact_name = contact_name
         self.phone = phone
         self.type = type
         self.address = address
         self.hours = hours
+        self.user_id = user_id
     def json(self):
         return {
             'organization_name': self.organization_name,
@@ -44,15 +45,14 @@ class Organization(db.Model):
 
 class Organizations(Resource):
     def get(self,organization_name):
-        organization = Organization.filter_by(organization_name=organization_name).first()
+        organization = Organization.query.filter_by(organization_name=organization_name).first()
         if organization:
             return organization.json()
         else:
             return {'name':None},404
     @jwt_required()
     def delete(self,organization_name):
-        organization = Organization.query.filter_by(organization_name = organization_name).first()
-        db.session.delete(organization)
+        Organization.query.filter_by(organization_name = organization_name).delete()
         db.session.commit()
         return {'note':'delete success'}
 
@@ -75,15 +75,16 @@ class AddOrganization(Resource):
 class EditOrganization(Resource):
     @jwt_required()
 
-    def edit(self):
+    def put(self):
         args=request.get_json(force=True)
+        organization_id = args['id']
         organization_name = args['organization_name']
         contact_name = args['contact_name']
         phone = args['phone']
         type = args['type']
         address = args['address']
         hours = args['hours']
-        organization = Organization.filter_by(organization_name=organization_name).first()
+        organization = Organization.query.filter_by(id=organization_id).first()
         organization.organization_name = organization_name
         organization.contact_name = contact_name
         organization.phone = phone
@@ -137,7 +138,7 @@ def identity(payload):
     return User.query.filter_by(id=user_id).first()
 
 jwt = JWT(app,authenticate,identity)
-api.add_resource(Organizations,'/organization/<string:name>')
+api.add_resource(Organizations,'/organization/<string:organization_name>')
 api.add_resource(AddOrganization,'/add')
 api.add_resource(EditOrganization,'/edit')
 api.add_resource(AllOrganization,'/allorganizations')
