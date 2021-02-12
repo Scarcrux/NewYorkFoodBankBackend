@@ -1,11 +1,10 @@
 from time import time
 from uuid import uuid4
-from db import db
+from app import db
 
 CONFIRMATION_EXPIRATION_DELTA = 1800  # 30 minutes
 
-
-class Confirmation(db.Model):
+class ConfirmationModel(db.Model):
     __tablename__ = "confirmations"
 
     id = db.Column(db.String(50), primary_key=True)
@@ -21,16 +20,18 @@ class Confirmation(db.Model):
         self.expire_at = int(time()) + CONFIRMATION_EXPIRATION_DELTA
         self.confirmed = False
 
-    @classmethod
-    def find_by_id(cls, _id: str) -> "ConfirmationModel":
-        return cls.query.filter_by(id=_id).first()
-
-    @property
-    def expired(self) -> bool:
+    def expired(self):
         return time() > self.expire_at
 
-    def force_to_expire(self) -> None:  # forcing current confirmation to expire
+    def force_to_expire(self):  # forcing current confirmation to expire
         if not self.expired:
             self.expire_at = int(time())
             db.session.add(self)
             db.session.commit()
+    
+    def json(self):
+        return {
+            'expire_at': self.expire_at,
+            'confirmed': self.confirmed,
+            'user_id': self.user_id
+        }

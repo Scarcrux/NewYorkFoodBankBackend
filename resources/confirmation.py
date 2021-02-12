@@ -1,21 +1,20 @@
 from flask_restful import Resource
 import traceback
 from time import time
-from db import db
+from app import db
 
-from models.confirmation import Confirmation
+from models.confirmation import ConfirmationModel
 from models.user import User
 from libs.mailgun import MailGunException
 
 class Confirmation(Resource):
     # returns the confirmation page
-    @classmethod
-    def get(cls, confirmation_id: str):
-        confirmation = Confirmation.find_by_id(confirmation_id)
+    def get(self, confirmation_id: str):
+        confirmation = ConfirmationModel.query.filter_by(id=confirmation_id).first()
         if not confirmation:
             return {"message": "confirmation_not_found"}, 404
 
-        if confirmation.expired:
+        if confirmation.expired():
             return {"message": "confirmation_link_expired"}, 400
 
         if confirmation.confirmed:
@@ -27,12 +26,11 @@ class Confirmation(Resource):
 
 
 class ConfirmationByUser(Resource):
-    @classmethod
-    def get(cls, user_id: int):
+    def get(self, user_id: int):
         """
         This endpoint is used for testing and viewing Confirmation models and should not be exposed to public.
         """
-        user = User.find_by_id(user_id)
+        user = User.query.filter_by(id=user_id)
         if not user:
             return {"message": "user_not_found"}, 404
         return (
@@ -47,19 +45,18 @@ class ConfirmationByUser(Resource):
             200,
         )
 
-    @classmethod
-    def post(cls, user_id):
+    def post(self, user_id):
         """
         This endpoint resend the confirmation email with a new confirmation model. It will force the current
         confirmation model to expire so that there is only one valid link at once.
         """
-        user = User.find_by_id(user_id)
+        user = User.query.filter_by(id=user_id)
         if not user:
             return {"message": "user_not_found"}, 404
 
         try:
             # find the most current confirmation for the user
-            confirmation = user.most_recent_confirmation  # using property decorator
+            confirmation = user.most_recent_confirmation()  # using property decorator
             if confirmation:
                 if confirmation.confirmed:
                     return {"message": "confirmation_already_confirmed"}, 400

@@ -1,7 +1,8 @@
 from flask_restful import Resource
-from flask_jwt import jwt_required
+from flask_jwt_extended import jwt_required
 from models.organization import Organization
-from db import db
+from flask import request
+from app import db
 
 class Organizations(Resource):
     def get(self,organization_name):
@@ -10,7 +11,7 @@ class Organizations(Resource):
             return organization.json()
         else:
             return {'name':None},404
-    @jwt_required()
+    @jwt_required
     def delete(self,organization_name):
         Organization.query.filter_by(organization_name = organization_name).delete()
         db.session.commit()
@@ -33,7 +34,7 @@ class AddOrganization(Resource):
         return organization.json()
 
 class EditOrganization(Resource):
-    @jwt_required()
+    @jwt_required
     def put(self):
         args=request.get_json(force=True)
         organization_id = args['id']

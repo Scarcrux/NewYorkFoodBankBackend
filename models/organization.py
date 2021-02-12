@@ -1,4 +1,4 @@
-from db import db
+from app import db
 
 class Organization(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -9,6 +9,7 @@ class Organization(db.Model):
     address = db.Column(db.String(80))
     hours = db.Column(db.String(10))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    
     def __init__(self,organization_name, contact_name, phone, type, address, hours, user_id):
         self.organization_name = organization_name
         self.contact_name = contact_name
@@ -17,6 +18,7 @@ class Organization(db.Model):
         self.address = address
         self.hours = hours
         self.user_id = user_id
+
     def json(self):
         return {
             'organization_name': self.organization_name,
