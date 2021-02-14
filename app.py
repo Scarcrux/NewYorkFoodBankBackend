@@ -3,6 +3,8 @@ from flask_restful import Resource, Api
 from flask_jwt_extended import ( JWTManager, jwt_required )
 from flask_sqlalchemy import SQLAlchemy
 from blacklist import BLACKLIST
+from flask_cors import CORS
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 
@@ -14,6 +16,7 @@ app.config["JWT_BLACKLIST_ENABLED"] = True  # enable blacklist feature
 app.config["JWT_BLACKLIST_TOKEN_CHECKS"] = ["access"]
 
 db = SQLAlchemy(app)
+Migrate(app,db)
 api = Api(app)
 jwt = JWTManager(app)
 
@@ -34,6 +37,7 @@ api.add_resource(UserLogin, "/login")
 api.add_resource(UserLogout, "/logout")
 api.add_resource(Confirmation, "/user_confirm/<string:confirmation_id>")
 api.add_resource(ConfirmationByUser, "/confirmation/user/<int:user_id>")
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 if __name__ == '__main__':
     app.run(debug=True)

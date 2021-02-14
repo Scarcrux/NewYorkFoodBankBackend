@@ -25,10 +25,11 @@ class AddOrganization(Resource):
         phone = args['phone']
         type = args['type']
         address = args['address']
+        geocode = args['geocode']
         hours = args['hours']
         user_id = args['user_id']
         organization = Organization(organization_name = organization_name, contact_name = contact_name, phone = phone, type = type,
-        address = address, hours = hours, user_id=user_id)
+        address = address, geocode = geocode, hours = hours, user_id=user_id)
         db.session.add(organization)
         db.session.commit()
         return organization.json()
@@ -43,6 +44,7 @@ class EditOrganization(Resource):
         phone = args['phone']
         type = args['type']
         address = args['address']
+        geocode = args['geocode']
         hours = args['hours']
         organization = Organization.query.filter_by(id=organization_id).first()
         organization.organization_name = organization_name
@@ -50,6 +52,7 @@ class EditOrganization(Resource):
         organization.phone = phone
         organization.type = type
         organization.address = address
+        organization.geocode = geocode
         organization.hours = hours
         db.session.commit()
         return organization.json()

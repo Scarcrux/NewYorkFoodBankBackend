@@ -36,7 +36,8 @@ class UserLogin(Resource):
             confirmation = user.most_recent_confirmation()
             if confirmation and confirmation.confirmed:
                 access_token = create_access_token(identity=user.id)
-                return {"access_token": access_token}, 200
+                return {"access_token": access_token,
+                        "user_id": user.id}, 200
             return {"message": "user_not_confirmed" }, 400
 
         return {"message": "user_invalid_credentials" }, 401
@@ -50,4 +51,3 @@ class UserLogout(Resource):
         return {"message": "user_logged_out"}, 200
 
 
- 
