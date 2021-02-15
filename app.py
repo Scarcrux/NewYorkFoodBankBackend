@@ -27,11 +27,16 @@ def check_if_token_in_blacklist(decrypted_token):
 from resources.organization import Organizations, AddOrganization, EditOrganization, AllOrganization
 from resources.user import AddUser, UserLogin, UserLogout
 from resources.confirmation import Confirmation, ConfirmationByUser
+from resources.pantry import Pantries, AddPantry, EditPantry, AllPantries
 
 api.add_resource(Organizations,'/organization/<string:organization_name>')
 api.add_resource(AddOrganization,'/add')
 api.add_resource(EditOrganization,'/edit')
 api.add_resource(AllOrganization,'/allorganizations')
+api.add_resource(Pantries,'/pantry/<string:pantry_name>')
+api.add_resource(AddPantry,'/addPantry')
+api.add_resource(EditPantry,'/editPantry')
+api.add_resource(AllPantries,'/allpantries')
 api.add_resource(AddUser,'/register')
 api.add_resource(UserLogin, "/login")
 api.add_resource(UserLogout, "/logout")
