@@ -18,6 +18,7 @@ class Organizations(Resource):
         return {'note':'delete success'}
 
 class AddOrganization(Resource):
+    @jwt_required
     def post(self):
         args=request.get_json(force=True)
         organization_name = args['organization_name']
