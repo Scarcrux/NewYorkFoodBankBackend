@@ -1,9 +1,13 @@
 import os
 from typing import List
+from dotenv import load_dotenv, find_dotenv
+from requests import Response, post
 
 FAILED_LOAD_API_KEY = "Failed to load MailGun API key."
 FAILED_LOAD_DOMAIN = "Failed to load MailGun domain."
 ERROR_SENDING_EMAIL = "Error in sending confirmation email, user registration failed."
+
+load_dotenv(find_dotenv())
 
 class MailGunException(Exception):
     def __init__(self, message: str):

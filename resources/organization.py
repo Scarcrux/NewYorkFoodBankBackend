@@ -60,5 +60,12 @@ class EditOrganization(Resource):
 
 class AllOrganization(Resource):
     def get(self):
-        allorganizations=Organization.query.all()
+        allorganizations=Organization.query.filter_by(organization_name = organization_name)
+        return [organization.json() for organization in allorganizations ]
+
+class MyOrganization(Resource):
+    def get(self):
+        args=request.get_json(force=True)
+        user_id = args['user_id']
+        allorganizations=Organization.query.filter_by(user_id = user_id)
         return [organization.json() for organization in allorganizations ]
