@@ -61,8 +61,9 @@ class EditOrganization(Resource):
 
 class AllOrganization(Resource):
     def get(self):
-        allorganizations=Organization.query.filter_by(organization_name = organization_name)
-        return [organization.json() for organization in allorganizations ]
+        shares = db.session.query(Organization)
+        result = organizations_schema.dump(shares)
+        return jsonify(result)
 
 class MyOrganization(Resource):
     def get(self, user_id):

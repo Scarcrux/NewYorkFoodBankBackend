@@ -1,9 +1,15 @@
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required
 from models.pantry import Pantry
-from flask import request
-from app import db
+from flask import request, jsonify
+from app import db,ma
 
+class PantrySchema(ma.Schema):
+    class Meta:
+        fields = ('id','pantry_name','type','address','contact_name','phone','hours','geocode')
+
+pantry_schema = PantrySchema()
+pantries_schema = PantrySchema(many=True)
 class Pantries(Resource):
     def get(self,pantry_name):
         pantry = Pantry.query.filter_by(pantry_name=pantry_name).first()
@@ -60,5 +66,6 @@ class EditPantry(Resource):
 
 class AllPantries(Resource):
     def get(self):
-        allpantries=Pantry.query.all()
-        return [pantry.json() for pantry in allpantries ]
+        shares = db.session.query(Pantry)
+        result = pantries_schema.dump(shares)
+        return jsonify(result)
