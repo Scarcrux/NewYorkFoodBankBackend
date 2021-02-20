@@ -75,3 +75,9 @@ class MyPantries(Resource):
         shares = db.session.query(Pantry).filter_by(organization_id = organization_id)
         result = pantries_schema.dump(shares)
         return jsonify(result)
+
+class SinglePantry(Resource):
+    def get(self, pantry_id):
+        shares = db.session.query(Pantry).filter_by(id = pantry_id)
+        result = pantries_schema.dump(shares)
+        return jsonify(result)
