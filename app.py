@@ -5,6 +5,8 @@ from flask_sqlalchemy import SQLAlchemy
 from blacklist import BLACKLIST
 from flask_cors import CORS
 from flask_migrate import Migrate
+from flask_marshmallow import Marshmallow
+
 
 app = Flask(__name__)
 
@@ -19,22 +21,26 @@ db = SQLAlchemy(app)
 Migrate(app,db)
 api = Api(app)
 jwt = JWTManager(app)
+ma = Marshmallow(app)
 
 @jwt.token_in_blacklist_loader
 def check_if_token_in_blacklist(decrypted_token):
     return decrypted_token["jti"] in BLACKLIST
 
-from resources.organization import Organizations, AddOrganization, EditOrganization, AllOrganization, MyOrganization
+from resources.organization import Organizations, AddOrganization, EditOrganization, AllOrganization, MyOrganization, AnOrganization
 from resources.user import AddUser, UserLogin, UserLogout
 from resources.confirmation import Confirmation, ConfirmationByUser
-from resources.pantry import Pantries, AddPantry, EditPantry, AllPantries
+from resources.pantry import Pantries, AddPantry, EditPantry, AllPantries, MyPantries, SinglePantry
 
 api.add_resource(Organizations,'/organization/<string:organization_name>')
 api.add_resource(AddOrganization,'/add')
 api.add_resource(EditOrganization,'/edit')
 api.add_resource(AllOrganization,'/allorganizations')
-api.add_resource(MyOrganization,'/myorganizations')
+api.add_resource(MyOrganization,'/myorganizations/<int:user_id>')
+api.add_resource(MyPantries,'/mypantries/<int:organization_id>')
+api.add_resource(AnOrganization,'/org/<int:id>')
 api.add_resource(Pantries,'/pantry/<string:pantry_name>')
+api.add_resource(SinglePantry,'/pan/<int:pantry_id>')
 api.add_resource(AddPantry,'/addPantry')
 api.add_resource(EditPantry,'/editPantry')
 api.add_resource(AllPantries,'/allpantries')
