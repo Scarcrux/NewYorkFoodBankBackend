@@ -11,7 +11,7 @@ class Pantry(db.Model):
     hours = db.Column(db.String(200))
     organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'), nullable=False)
 
-    def __init__(self,pantry_name, contact_name, phone, type, address, geocode, hours, organization_id):
+    def __init__(self, pantry_name, contact_name, phone, type, address, geocode, hours, organization_id):
         self.pantry_name = pantry_name
         self.contact_name = contact_name
         self.phone = phone
