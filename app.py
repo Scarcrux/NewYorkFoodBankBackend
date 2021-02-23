@@ -31,6 +31,7 @@ from resources.organization import Organizations, AddOrganization, EditOrganizat
 from resources.user import AddUser, UserLogin, UserLogout
 from resources.confirmation import Confirmation, ConfirmationByUser
 from resources.pantry import Pantries, AddPantry, EditPantry, AllPantries, MyPantries, SinglePantry
+from resources.payment import Payment
 
 api.add_resource(Organizations,'/organization/<string:organization_name>')
 api.add_resource(AddOrganization,'/add')
@@ -49,6 +50,7 @@ api.add_resource(UserLogin, "/login")
 api.add_resource(UserLogout, "/logout")
 api.add_resource(Confirmation, "/user_confirm/<string:confirmation_id>")
 api.add_resource(ConfirmationByUser, "/confirmation/user/<int:user_id>")
+api.add_resource(Payment, "/pay")
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 if __name__ == '__main__':

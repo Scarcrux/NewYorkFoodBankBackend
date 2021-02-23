@@ -50,4 +50,9 @@ class UserLogout(Resource):
         BLACKLIST.add(jti)
         return {"message": "user_logged_out"}, 200
 
-
+class UserLogout(Resource):
+    @jwt_required
+    def post(self):
+        jti = get_raw_jwt()["jti"]  # jti is "JWT ID", a unique identifier for a JWT.
+        BLACKLIST.add(jti)
+        return {"message": "user_logged_out"}, 200
