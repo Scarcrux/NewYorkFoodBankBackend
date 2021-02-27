@@ -4,7 +4,7 @@ class Pantry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     pantry_name = db.Column(db.String(80))
     contact_name = db.Column(db.String(20))
-    phone = db.Column(db.String(10))
+    phone = db.Column(db.String(14))
     type = db.Column(db.String(20))
     address = db.Column(db.String(80))
     geocode = db.Column(db.String(80))
