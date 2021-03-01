@@ -27,7 +27,7 @@ matplotlib==3.3.4
 numpy==1.20.1
 Pillow==8.1.0
 pipenv==2020.11.15
-PyJWT==1.7.1
+PyJWT==1.4.2
 pyparsing==2.4.7
 python-dateutil==2.8.1
 python-dotenv==0.15.0
