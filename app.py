@@ -6,7 +6,7 @@ from blacklist import BLACKLIST
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_marshmallow import Marshmallow
-
+from flask_talisman import Talisman
 
 app = Flask(__name__)
 
@@ -26,6 +26,19 @@ ma = Marshmallow(app)
 @jwt.token_in_blacklist_loader
 def check_if_token_in_blacklist(decrypted_token):
     return decrypted_token["jti"] in BLACKLIST
+
+# content security policy
+csp = {
+    'connect-src': 'https://nyfoodbank.herokuapp.com/',
+    'default-src': '\'self\'',
+    'img-src': '*',
+    'media-src': [
+        '*'
+    ],
+    'script-src': '*',
+    'worker-src': '*'
+}
+talisman = Talisman(app, content_security_policy=csp)
 
 from resources.organization import Organizations, AddOrganization, EditOrganization, AllOrganization, MyOrganization, AnOrganization
 from resources.user import AddUser, UserLogin, UserLogout
