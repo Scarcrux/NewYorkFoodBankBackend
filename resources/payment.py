@@ -13,19 +13,14 @@ class PaymentSchema(ma.Schema):
 payment_schema = PaymentSchema()
 payments_schema = PaymentSchema(many=True)
 class Payment(Resource):
-    
-    def get(self):
-        allPayments=PaymentModel.query.all()
-        return [payment.json() for payment in allPayments ]
-    
-    def post(self):
+        
+    def post(self, user_id):
         """
         Expect a token and a list of item ids from the request body.
         Construct an order and talk to the Strip API to make a charge.
         """
         args=request.get_json(force=True)
         amount = args['amount']
-        user_id = args['user_id']
         payment = PaymentModel(amount=amount, status="pending", user_id=user_id)
         db.session.add(payment)
         db.session.commit() # this does not submit to Stripe
@@ -63,3 +58,8 @@ class Payment(Resource):
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             print(exc_type, fname, exc_tb.tb_lineno)
             return {"message": "payment_error"}, 500
+
+class AllPayments(Resource):
+    def get(self):
+        allPayments=PaymentModel.query.all()
+        return [payment.json() for payment in allPayments ]
