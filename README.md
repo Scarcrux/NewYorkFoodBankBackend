@@ -37,9 +37,11 @@ Frontend: https://github.com/yuyingsu/NewYorkFoodBank
 ### Run Backend
 
 ```
-$ pip3 install
+$ python3 -m venv env
+$ source env/bin/activate
+$ python3 -m pip install -r requirements.txt
 $ flask db init
-$ flask db migrate -m "1st migrate"
+$ flask db migrate -m "1st Migration"
 $ flask db upgrade
 $ flask run
 ```
