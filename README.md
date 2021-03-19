@@ -34,14 +34,23 @@ Frontend: https://github.com/yuyingsu/NewYorkFoodBank
 
 ## Installation
 
-### Run Backend
+### Create .flaskenv File in Root and Configure Environmental Variables 
+
+### Create Virtual Environment and Install Python Package Dependencies
 
 ```
 $ python3 -m venv env
 $ source env/bin/activate
 $ python3 -m pip install -r requirements.txt
+```
+
+### Create Database
+```
 $ flask db init
 $ flask db migrate -m "1st Migration"
 $ flask db upgrade
+```
+### Start Flask Server
+```
 $ flask run
 ```
